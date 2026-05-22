@@ -1,3 +1,8 @@
+import {
+  emitWorkflowEvent,
+  recordNodeCompletion,
+} from "@/utils/workflow-events.js";
+
 import type { LeadQualificationState } from "../state.js";
 import type { LeadData } from "../types.js";
 
@@ -12,12 +17,17 @@ const fakeLeadDB: LeadData[] = [
 
 export async function fetchLeadNode(
   state: LeadQualificationState
-): Promise<LeadQualificationState> {
+): Promise<Partial<LeadQualificationState>> {
+  const startedAt = Date.now();
+
+  emitWorkflowEvent("fetchLead", "Fetching lead data");
+
   const lead = fakeLeadDB.find((leadData) => leadData.email === state.email);
 
   return {
-    ...state,
-
     leadData: lead,
+    ...recordNodeCompletion("fetchLead", startedAt, {
+      startedAt: new Date(startedAt).toISOString(),
+    }),
   };
 }

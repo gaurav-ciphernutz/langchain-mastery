@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "graph": "tsx watch playground/langgraph.ts",
+    "checkpoint": "tsx src/playground/checkpoint-inspect.ts",
+    "resume": "tsx src/playground/resume-workflow.ts",
+    "stream": "tsx src/playground/stream-workflow.ts",
     "multi-tool": "tsx watch playground/multi-tool-agent.ts",
     "playground": "tsx watch playground/lead-qualifier.ts",
     "structured": "tsx watch playground/structured-output.ts",
@@ -27,6 +30,8 @@
     "@langchain/core": "^1.1.48",
     "@langchain/google-genai": "^2.1.31",
     "@langchain/langgraph": "^1.3.2",
+    "@langchain/langgraph-checkpoint-sqlite": "^1.0.1",
+    "better-sqlite3": "^12.6.0",
     "dotenv": "^17.4.2",
     "langchain": "^1.4.2",
     "pino": "^10.3.1",
@@ -34,6 +39,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.9.1",
     "eslint": "^10.4.0",
     "eslint-config-prettier": "^10.1.8",

@@ -35,5 +35,9 @@ tmp/
 temp/
 *.tmp
 
+# Local LangGraph checkpoints
+langgraph.db
+langgraph.db-*
+
 # LangSmith (if you use it)
 .langsmith/

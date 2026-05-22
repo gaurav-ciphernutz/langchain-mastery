@@ -1,14 +1,23 @@
+import {
+  emitWorkflowEvent,
+  recordNodeCompletion,
+} from "@/utils/workflow-events.js";
+
 import type { LeadQualificationState } from "../state.js";
 
 export async function scoreLeadNode(
   state: LeadQualificationState
-): Promise<LeadQualificationState> {
+): Promise<Partial<LeadQualificationState>> {
+  const startedAt = Date.now();
+
+  emitWorkflowEvent("scoreLead", "Scoring lead");
+
   const lead = state.leadData;
 
   if (!lead) {
     return {
-      ...state,
       score: 0,
+      ...recordNodeCompletion("scoreLead", startedAt),
     };
   }
 
@@ -23,8 +32,7 @@ export async function scoreLeadNode(
   }
 
   return {
-    ...state,
-
     score,
+    ...recordNodeCompletion("scoreLead", startedAt),
   };
 }

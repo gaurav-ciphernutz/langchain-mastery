@@ -1,11 +1,16 @@
+import {
+  emitWorkflowEvent,
+  recordNodeCompletion,
+} from "@/utils/workflow-events.js";
+
 import type { LeadQualificationState } from "../state.js";
 
-export async function warmLeadNode(
-  state: LeadQualificationState
-): Promise<LeadQualificationState> {
-  console.log("WARM LEAD -> Follow-up sequence");
+export async function warmLeadNode(): Promise<Partial<LeadQualificationState>> {
+  const startedAt = Date.now();
+
+  emitWorkflowEvent("warmLead", "Starting follow-up sequence");
 
   return {
-    ...state,
+    ...recordNodeCompletion("warmLead", startedAt),
   };
 }

@@ -1,13 +1,12 @@
-import { HumanMessage } from "@langchain/core/messages";
+import { Command } from "@langchain/langgraph";
 
 import { leadQualificationWorkflow } from "@/workflows/lead-qualification/graph.js";
 
 async function run() {
   const result = await leadQualificationWorkflow.invoke(
-    {
-      email: "john@example.com",
-      messages: [new HumanMessage("Analyze this lead")],
-    },
+    new Command({
+      resume: "approved",
+    }),
     {
       configurable: {
         thread_id: "lead-001",
