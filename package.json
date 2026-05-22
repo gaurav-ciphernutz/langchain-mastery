@@ -10,6 +10,7 @@
     "checkpoint": "tsx src/playground/checkpoint-inspect.ts",
     "resume": "tsx src/playground/resume-workflow.ts",
     "stream": "tsx src/playground/stream-workflow.ts",
+    "dynamic-tools": "tsx src/playground/dynamic-tools.ts",
     "multi-tool": "tsx watch playground/multi-tool-agent.ts",
     "playground": "tsx watch playground/lead-qualifier.ts",
     "structured": "tsx watch playground/structured-output.ts",

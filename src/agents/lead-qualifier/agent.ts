@@ -1,24 +1,61 @@
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { createAgent } from "langchain";
 
 import { geminiFlash } from "@/llm/gemini.js";
+import { createDynamicToolSelectionMiddleware } from "@/middleware/index.js";
+import { ALL_REGISTERED_TOOLS } from "@/tools/index.js";
 
 import { SYSTEM_PROMPT } from "./prompt.js";
-import {
-  generateFollowupMessageTool,
-  getLeadByEmailTool,
-  leadScoreTool,
-  scheduleTestDriveTool,
-} from "./tools.js";
 
-export const leadQualifierAgent = createReactAgent({
-  llm: geminiFlash,
+export const leadQualifierTools = ALL_REGISTERED_TOOLS;
 
-  tools: [
-    getLeadByEmailTool,
-    leadScoreTool,
-    generateFollowupMessageTool,
-    scheduleTestDriveTool,
-  ],
+export const leadQualifierToolSelectionMiddleware =
+  createDynamicToolSelectionMiddleware({
+    rules: [
+      {
+        toolNames: ["get_lead_tool", "getLeadByEmail"],
+        keywords: ["lead", "crm", "email", "fetch", "customer", "profile"],
+      },
+      {
+        toolNames: ["lead_score_tool"],
+        keywords: [
+          "analyze",
+          "category",
+          "classify",
+          "qualify",
+          "quality",
+          "score",
+        ],
+      },
+      {
+        toolNames: ["send_whatsapp_message", "generateFollowupMessage"],
+        keywords: [
+          "draft",
+          "follow-up",
+          "followup",
+          "message",
+          "reply",
+          "whatsapp",
+        ],
+      },
+      {
+        toolNames: ["scheduleTestDrive"],
+        keywords: [
+          "appointment",
+          "book",
+          "schedule",
+          "showroom",
+          "test drive",
+        ],
+      },
+    ],
+  });
 
-  prompt: SYSTEM_PROMPT,
+export const leadQualifierAgent = createAgent({
+  model: geminiFlash,
+
+  tools: leadQualifierTools,
+
+  middleware: [leadQualifierToolSelectionMiddleware],
+
+  systemPrompt: SYSTEM_PROMPT,
 });
