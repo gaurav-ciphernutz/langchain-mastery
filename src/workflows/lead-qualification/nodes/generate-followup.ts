@@ -47,6 +47,7 @@ export async function generateFollowupNode(
   return {
     messages: [new AIMessage(`Follow-up Generated: ${followupMessage}`)],
     followupMessage,
+    workflowStatus: "completed",
     ...recordNodeCompletion("generateFollowup", startedAt, {
       completedAt: new Date().toISOString(),
       modelUsed: MODELS.GEMINI_3_5_FLASH,

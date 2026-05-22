@@ -1,7 +1,8 @@
 import { AIMessage } from "@langchain/core/messages";
 
-import { geminiFlash } from "@/llm/gemini.js";
+import { invokeWithFallback } from "@/llm/fallback.js";
 import { MODELS } from "@/llm/models.js";
+import { withRetry } from "@/utils/retry.js";
 import {
   emitWorkflowEvent,
   recordNodeCompletion,
@@ -24,7 +25,12 @@ export async function analyzeLeadNode(
 
   emitWorkflowEvent("analyzeLead", "Analyzing lead data");
 
-  const stream = await geminiFlash.stream(`
+  const response = await withRetry(async () => {
+    if (process.env.SIMULATE_ANALYZE_FAILURE === "true") {
+      throw new Error("Simulated LLM failure");
+    }
+
+    return invokeWithFallback(`
     Analyze this enriched lead context:
 
     ${JSON.stringify(state.enrichedContext, null, 2)}
@@ -34,14 +40,10 @@ export async function analyzeLeadNode(
     - lead category
     - recommended action
   `);
+  });
 
-  let analysis = "";
-  let totalTokens = 0;
-
-  for await (const chunk of stream) {
-    analysis += contentToText(chunk.content);
-    totalTokens = chunk.usage_metadata?.total_tokens ?? totalTokens;
-  }
+  const analysis = contentToText(response.content);
+  const totalTokens = response.usage_metadata?.total_tokens ?? 0;
 
   return {
     analysis,

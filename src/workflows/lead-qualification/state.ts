@@ -18,10 +18,32 @@ export interface WorkflowExecutionMetrics {
   modelUsed?: string;
 }
 
+export interface WorkflowError {
+  node?: string;
+  timestamp: string;
+  message: string;
+}
+
+export type WorkflowStatus =
+  | "running"
+  | "completed"
+  | "failed"
+  | "waiting_approval";
+
 export const LeadStateAnnotation = Annotation.Root({
   messages: Annotation<BaseMessage[]>({
     reducer: (current, update) => current.concat(update),
     default: () => [],
+  }),
+
+  errors: Annotation<WorkflowError[]>({
+    reducer: (current, update) => current.concat(update),
+    default: () => [],
+  }),
+
+  workflowStatus: Annotation<WorkflowStatus>({
+    reducer: (_current, update) => update,
+    default: () => "running",
   }),
 
   email: Annotation<string>(),
