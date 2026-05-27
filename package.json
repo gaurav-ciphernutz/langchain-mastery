@@ -11,8 +11,10 @@
     "resume": "tsx src/playground/resume-workflow.ts",
     "stream": "tsx src/playground/stream-workflow.ts",
     "dynamic-tools": "tsx src/playground/dynamic-tools.ts",
+    "ingest": "tsx src/scripts/ingest.ts",
     "multi-tool": "tsx watch playground/multi-tool-agent.ts",
     "playground": "tsx watch playground/lead-qualifier.ts",
+    "rag": "tsx src/playground/rag.ts",
     "structured": "tsx watch playground/structured-output.ts",
     "start": "tsx src/index.ts",
     "build": "tsc",
@@ -28,13 +30,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@langchain/community": "^1.1.28",
     "@langchain/core": "^1.1.48",
     "@langchain/google-genai": "^2.1.31",
     "@langchain/langgraph": "^1.3.2",
     "@langchain/langgraph-checkpoint-sqlite": "^1.0.1",
+    "@langchain/textsplitters": "^1.0.1",
     "better-sqlite3": "^12.6.0",
+    "chromadb": "^3.4.3",
     "dotenv": "^17.4.2",
     "langchain": "^1.4.2",
+    "pdf-parse": "^2.4.5",
     "pino": "^10.3.1",
     "zod": "^4.4.3"
   },
@@ -62,5 +68,6 @@
     "*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"
 }
