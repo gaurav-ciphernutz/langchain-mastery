@@ -1,6 +1,4 @@
-import { createAgent } from "langchain";
-
-import { geminiFlash } from "@/llm/gemini.js";
+import { createDynamicAgent } from "@/agents/factory/create-agent.js";
 import { createDynamicToolSelectionMiddleware } from "@/middleware/index.js";
 import { ALL_REGISTERED_TOOLS } from "@/tools/index.js";
 
@@ -50,12 +48,8 @@ export const leadQualifierToolSelectionMiddleware =
     ],
   });
 
-export const leadQualifierAgent = createAgent({
-  model: geminiFlash,
-
+export const leadQualifierAgent = createDynamicAgent({
   tools: leadQualifierTools,
-
   middleware: [leadQualifierToolSelectionMiddleware],
-
   systemPrompt: SYSTEM_PROMPT,
 });

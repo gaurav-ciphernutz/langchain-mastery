@@ -2,6 +2,11 @@ import type { BaseMessage } from "@langchain/core/messages";
 import type { ClientTool, ServerTool } from "@langchain/core/tools";
 import { createMiddleware } from "langchain";
 
+import {
+  getRuntimeContext,
+  runtimeCorrelationFields,
+} from "@/runtime/context.js";
+import { getToolDescriptor } from "@/tools/index.js";
 import { logger } from "@/utils/logger.js";
 
 type ToolLike = ClientTool | ServerTool;
@@ -139,14 +144,31 @@ export function createDynamicToolSelectionMiddleware(
     name: "dynamicToolSelectionMiddleware",
 
     wrapModelCall: async (request, handler) => {
+      const runtime = getRuntimeContext();
       const requestText = getLatestHumanMessageText(request.messages);
       const selectedToolNames = selectToolNames(requestText, options);
       const tools = selectTools(request.tools, selectedToolNames, options);
+      const selectedToolPolicies = tools.flatMap((tool) => {
+        const name = getToolName(tool);
+        const descriptor = name ? getToolDescriptor(name) : undefined;
+
+        return name && descriptor
+          ? [
+              {
+                name,
+                category: descriptor.category,
+                policy: descriptor.policy,
+              },
+            ]
+          : [];
+      });
 
       logger.info(
         {
+          runtime: runtimeCorrelationFields(runtime),
           availableToolCount: request.tools.length,
           selectedTools: tools.map(getToolName).filter(Boolean),
+          selectedToolPolicies,
         },
         "Selected tools for model call"
       );

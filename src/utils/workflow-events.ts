@@ -3,9 +3,14 @@ import type {
   WorkflowExecutionMetrics,
 } from "@/workflows/lead-qualification/state.js";
 import type { LeadQualificationNodeName } from "@/workflows/lead-qualification/types.js";
+import { emitRuntimeEvent } from "@/runtime/events.js";
 
 export function emitWorkflowEvent(node: string, message: string) {
-  console.log(`[${node}] ${message}`);
+  emitRuntimeEvent({
+    type: "node.started",
+    nodeName: node,
+    message,
+  });
 }
 
 export function recordNodeCompletion(
@@ -15,7 +20,11 @@ export function recordNodeCompletion(
 ): Pick<LeadQualificationState, "executionMetrics"> {
   const durationMs = Date.now() - startedAt;
 
-  emitWorkflowEvent(node, `Completed in ${durationMs}ms`);
+  emitRuntimeEvent({
+    type: "node.completed",
+    nodeName: node,
+    durationMs,
+  });
 
   return {
     executionMetrics: {

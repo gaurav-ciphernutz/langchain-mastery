@@ -22,6 +22,15 @@ export interface WorkflowError {
   node?: string;
   timestamp: string;
   message: string;
+  retryable?: boolean;
+  attempt?: number;
+}
+
+export interface WorkflowFailure extends WorkflowError {
+  node: string;
+  retryable: boolean;
+  attempt: number;
+  deadLetterEligible: boolean;
 }
 
 export type WorkflowStatus =
@@ -44,6 +53,11 @@ export const LeadStateAnnotation = Annotation.Root({
   workflowStatus: Annotation<WorkflowStatus>({
     reducer: (_current, update) => update,
     default: () => "running",
+  }),
+
+  failure: Annotation<WorkflowFailure | undefined>({
+    reducer: (_current, update) => update,
+    default: () => undefined,
   }),
 
   email: Annotation<string>(),

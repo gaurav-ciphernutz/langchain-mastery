@@ -1,3 +1,13 @@
+import { emitRuntimeEvent } from "@/runtime/events.js";
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return String(error);
+}
+
 export async function withRetry<T>(
   fn: () => Promise<T>,
   retries = 3,
@@ -11,7 +21,13 @@ export async function withRetry<T>(
     } catch (error) {
       lastError = error;
 
-      console.log(`Retry ${attempt + 1} failed`);
+      emitRuntimeEvent({
+        type: "retry.attempt",
+        attempt: attempt + 1,
+        maxAttempts: retries,
+        delayMs: delay,
+        errorMessage: getErrorMessage(error),
+      });
 
       await new Promise((resolve) => {
         setTimeout(resolve, delay);

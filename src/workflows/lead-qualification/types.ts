@@ -33,6 +33,7 @@ export type LeadQualificationNodeName =
   | "warmLead"
   | "coldLead"
   | "requestApproval"
-  | "generateFollowup";
+  | "generateFollowup"
+  | "errorHandler";
 
 export type LeadRoute = "hotLead" | "warmLead" | "coldLead";

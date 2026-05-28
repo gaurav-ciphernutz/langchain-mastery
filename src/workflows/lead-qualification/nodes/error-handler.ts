@@ -1,17 +1,24 @@
+import { recordNodeCompletion } from "@/utils/workflow-events.js";
+
 import type { LeadQualificationState } from "../state.js";
 
 export async function errorHandlerNode(
-  _state: LeadQualificationState
+  state: LeadQualificationState
 ): Promise<Partial<LeadQualificationState>> {
-  console.log("Handling workflow error");
+  const startedAt = Date.now();
 
   return {
-    errors: [
-      {
-        timestamp: new Date().toISOString(),
-        message: "Workflow failure detected",
-      },
-    ],
+    ...(state.failure
+      ? {}
+      : {
+          errors: [
+            {
+              timestamp: new Date().toISOString(),
+              message: "Workflow failure detected",
+            },
+          ],
+        }),
     workflowStatus: "failed",
+    ...recordNodeCompletion("errorHandler", startedAt),
   };
 }

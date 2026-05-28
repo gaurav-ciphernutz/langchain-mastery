@@ -86,7 +86,13 @@ class ChromaVectorStore {
     });
   }
 
-  async similaritySearch(query: string, k = 4) {
+  async similaritySearch(
+    query: string,
+    k = 4,
+    options: { filters?: Record<string, unknown> } = {}
+  ) {
+    void options;
+
     const collection = await this.collection();
     const queryEmbedding = await embeddings.embedQuery(query);
     const results = await collection.query({
