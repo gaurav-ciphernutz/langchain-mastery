@@ -30,6 +30,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@fastify/websocket": "^11.2.0",
     "@langchain/community": "^1.1.28",
     "@langchain/core": "^1.1.48",
     "@langchain/google-genai": "^2.1.31",
@@ -39,6 +40,7 @@
     "better-sqlite3": "^12.6.0",
     "chromadb": "^3.4.3",
     "dotenv": "^17.4.2",
+    "fastify": "^5.8.5",
     "langchain": "^1.4.2",
     "pdf-parse": "^2.4.5",
     "pino": "^10.3.1",
